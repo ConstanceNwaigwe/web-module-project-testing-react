@@ -14,18 +14,43 @@ const testEpisode = {
 
 const testEpisodeWithoutImage = {
     //Add in approprate test data structure here.
+    id:2,
+    name: "altimage",
+    image: null,
+    season: 1,
+    number: 1,
+    summary: "altsummary",
+    runtime: 1
 }
 
 test("renders without error", () => {
+    render(<Episode episode={testEpisode}/>);
+    const getRuntime = screen.getByText(/1 minutes/i);
+    expect(getRuntime).toBeInTheDocument();
 
 });
 
 test("renders the summury test passed as prop", ()=>{
-    
+    const testSummary = "This is a test summary.";
+    render(<Episode episode={testEpisode}/>);
+
+    //const sum = screen.getByText(/This is a test summary./i);
+    expect(testEpisode.summary).toHaveLength(0);
+
+    testEpisode.summary = testSummary;
+    render(<Episode episode={testEpisode}/>);
+    const sum = screen.getByText(/This is a test summary./i);
+    expect(sum).toBeInTheDocument();
+    expect(testEpisode.summary).toHaveLength(testSummary.length);
 });
 
 test("renders default image when image is not defined", ()=>{
-    
+    render(<Episode episode={testEpisodeWithoutImage}/>);
+    const getName = screen.getByText(/altimage/i);
+    const getAlt = screen.getByAltText('./stranger_things.png');
+    expect(getName).toBeInTheDocument();
+    expect(getAlt).toBeInTheDocument();
+
 })
 
 //Tasks
