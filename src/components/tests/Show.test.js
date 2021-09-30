@@ -6,18 +6,96 @@ import Show from './../Show';
 
 const testShow = {
     //add in approprate test data structure here.
+    name: "test show name",
+    summary: "",
+    seasons: [{
+        id: 0,
+        name: "",
+        episodes: []
+    }],
+
 }
 
 test('renders testShow and no selected Season without errors', ()=>{
+    render(<Show show={testShow} selectedSeason={"none"} handleSelect={null}/>);
+    const getName = screen.getByText(/test show name/i);
+    expect(getName).toBeInTheDocument();
 });
 
 test('renders Loading component when prop show is null', () => {
+    render(<Show show={null} selectedSeason={"none"} handleSelect={null}/>);
+    const load = screen.getByText(/Fetching data.../i);
+    expect(load).toBeInTheDocument();
 });
 
 test('renders same number of options seasons are passed in', ()=>{
+    testShow.seasons = [{
+        id: 1,
+        name: "Five",
+        episodes: [{
+            id:2,
+            name: "episode 1",
+            image: null,
+            season: 1,
+            number: 1,
+            summary: "episode 1 summary",
+            runtime: 1
+        }]},
+        {
+            id: 2,
+            name: "four",
+            episodes: [{
+                id:3,
+                name: "episode 1",
+                image: null,
+                season: 2,
+                number: 1,
+                summary: "episode 1 summary",
+                runtime: 1
+            }]
+        }
+    ]
+    render(<Show show={testShow} selectedSeason={"none"} handleSelect={null}/>);
+    const findseasons = screen.getAllByRole('option')
+    expect(findseasons).toHaveLength(3);
+
 });
 
 test('handleSelect is called when an season is selected', () => {
+    testShow.seasons = [{
+        id: 1,
+        name: "Five",
+        episodes: [{
+            id:2,
+            name: "episode 1",
+            image: null,
+            season: 1,
+            number: 1,
+            summary: "episode 1 summary",
+            runtime: 1
+        }]},
+        {
+            id: 2,
+            name: "four",
+            episodes: [{
+                id:3,
+                name: "episode 1",
+                image: null,
+                season: 1,
+                number: 1,
+                summary: "episode 1 summary",
+                runtime: 1
+            }]
+        }
+    ]
+
+    const handleSelect = (e) =>{
+        e.preventdefault();
+    }
+    render(<Show show={testShow} selectedSeason={"none"} handleSelect={handleSelect}/>);
+    const pickSeason = screen.getByText(/four/i);
+    userEvent.click(pickSeason);
+    //expect(handleSelect.mock).toHaveBeenCalled();
 });
 
 test('component renders when no seasons are selected and when rerenders with a season passed in', () => {
